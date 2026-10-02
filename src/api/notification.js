@@ -30,11 +30,12 @@ export function useNotifications() {
       });
     }
 
-    // Invalidate notifications and mission queries so current page updates immediately
+    // Invalidate notifications, missions, and feeds so current page updates immediately
     queryClient.invalidateQueries({ queryKey: ["notifications"] });
     queryClient.invalidateQueries({ queryKey: ["mission"] });
     queryClient.invalidateQueries({ queryKey: ["missions"] });
     queryClient.invalidateQueries({ queryKey: ["orgMissions"] });
+    queryClient.invalidateQueries({ queryKey: ["feeds"] });
   });
 
   const markAllAsRead = async () => {

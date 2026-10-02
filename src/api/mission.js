@@ -175,6 +175,9 @@ export function useInfiniteFeeds({ limit = 10 }) {
       const nextPage = allPages.length + 1;
       return nextPage <= totalPages ? nextPage : undefined;
     },
+    refetchInterval: 4000, // Real-time polling so new likes and comments update without switching tabs
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 }
 
@@ -318,9 +321,14 @@ export function useLikeToggleOnFeedMutation(options = {}) {
       const { data } = await api.post(`/mission/like`, { missionId, type });
       return data;
     },
-    onSuccess: (data, missionId) => {
-      queryClient.refetchQueries({ queryKey: ["mission", missionId] });
+    onSuccess: (data, variables) => {
+      const missionId = variables?.missionId;
+      if (missionId) {
+        queryClient.invalidateQueries({ queryKey: ["mission", String(missionId)] });
+        queryClient.invalidateQueries({ queryKey: ["mission", Number(missionId)] });
+      }
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      queryClient.refetchQueries({ queryKey: ["feeds"] });
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
       showSuccess(data?.message || "Feed liked successfully!");
       options?.onSuccess?.(data);
@@ -340,8 +348,9 @@ export function useCommentDisableToggleOnFeedByAuthorMutation(options = {}) {
       const { data } = await api.put(`/mission/comment/${commentId}/toggle`);
       return data;
     },
-    onSuccess: (data, commentId) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      queryClient.refetchQueries({ queryKey: ["feeds"] });
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
       showSuccess(data?.message || "Comment disabled successfully!");
       options?.onSuccess?.(data);
@@ -361,9 +370,14 @@ export function useAddCommentOnFeedMutation(options = {}) {
       const { data } = await api.post(`/mission/${missionId}/comment`, { comment, type });
       return data;
     },
-    onSuccess: (data, missionId, comment) => {
-      queryClient.refetchQueries({ queryKey: ["mission", missionId, comment] });
+    onSuccess: (data, variables) => {
+      const missionId = variables?.missionId;
+      if (missionId) {
+        queryClient.invalidateQueries({ queryKey: ["mission", String(missionId)] });
+        queryClient.invalidateQueries({ queryKey: ["mission", Number(missionId)] });
+      }
       queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      queryClient.refetchQueries({ queryKey: ["feeds"] });
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
       showSuccess(data?.message || "Comment successfully!");
       options?.onSuccess?.(data);
@@ -384,8 +398,9 @@ export function useUpdateCommentOnFeedMutation(options = {}) {
       return data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["mission"]);
-      queryClient.invalidateQueries(["feeds"]);
+      queryClient.invalidateQueries({ queryKey: ["mission"] });
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      queryClient.refetchQueries({ queryKey: ["feeds"] });
       showSuccess(data?.message || "Comment updated!");
       options?.onSuccess?.(data);
     },
@@ -421,12 +436,13 @@ export function useDeleteCommentOnFeedMission(options = {}) {
       const { data } = await api.delete(`/mission/comment/${commentId}`);
       return data;
     },
-    onSuccess: (data, id) => {
+    onSuccess: (data, variables) => {
       showSuccess(data?.message || "Comment deleted successfully!");
-      queryClient.invalidateQueries(["mission"]);
-      queryClient.invalidateQueries(["feeds"]);
+      queryClient.invalidateQueries({ queryKey: ["mission"] });
+      queryClient.invalidateQueries({ queryKey: ["feeds"] });
+      queryClient.refetchQueries({ queryKey: ["feeds"] });
 
-      options?.onSuccess?.(data, id);
+      options?.onSuccess?.(data, variables);
     },
     onError: (err) => {
       const msg = err.response?.data?.message || "Comment deletion failed!";
