@@ -5,23 +5,28 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { useOnlineStatus } from "../hooks/useNetworkStatus";
 import { InternetStatus } from "../components/InternetStatus";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            refetchOnWindowFocus: true,
-            staleTime: 0,
+            refetchOnWindowFocus: false,
+            staleTime: 30 * 1000,
+            retry: 1,
         },
     },
 });
-// changes done
+
 export function AppProviders({ children }) {
     const isOnline = useOnlineStatus();
+    const wasOffline = useRef(false);
 
     useEffect(() => {
-        if (isOnline) {
-            queryClient.refetchQueries();
+        if (!isOnline) {
+            wasOffline.current = true;
+        } else if (wasOffline.current) {
+            wasOffline.current = false;
+            queryClient.invalidateQueries();
         }
     }, [isOnline]);
 

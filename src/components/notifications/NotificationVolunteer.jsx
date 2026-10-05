@@ -25,11 +25,7 @@ export default function NotificationVolunteer({ onClose }) {
 
   const { data: notifications = [], isLoading, markAllAsRead, refetch } = useNotifications();
 
-  const updateGroupStatus = useUpdateGroupVolunteerMissionStatus({
-    onSuccess: () => {
-      refetch();
-    }
-  });
+  const updateGroupStatus = useUpdateGroupVolunteerMissionStatus();
 
   const scheduledMissionIds = useMemo(() => {
     const ids = new Set();
@@ -141,7 +137,6 @@ export default function NotificationVolunteer({ onClose }) {
       queryClient.invalidateQueries({ queryKey: ["mission"] });
       queryClient.invalidateQueries({ queryKey: ["missions"] });
       queryClient.invalidateQueries({ queryKey: ["orgMissions"] });
-      refetch?.();
     }
   };
 
@@ -178,11 +173,10 @@ export default function NotificationVolunteer({ onClose }) {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
-              tab === t
+            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${tab === t
                 ? "bg-blue-600 text-white shadow-sm"
                 : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-            }`}
+              }`}
           >
             {t[0].toUpperCase() + t.slice(1)}
           </button>
@@ -256,11 +250,10 @@ export default function NotificationVolunteer({ onClose }) {
               return (
                 <div
                   key={n.id}
-                  className={`relative flex justify-between items-center gap-3 p-3.5 rounded-xl transition-all duration-200 border ${
-                    n.status === "unread" 
-                      ? "bg-blue-50/30 border-blue-100/50 hover:bg-blue-50/50" 
+                  className={`relative flex justify-between items-center gap-3 p-3.5 rounded-xl transition-all duration-200 border ${n.status === "unread"
+                      ? "bg-blue-50/30 border-blue-100/50 hover:bg-blue-50/50"
                       : "bg-white border-gray-100/70 hover:bg-gray-50/50"
-                  } ${loading === n.id ? "opacity-50" : "shadow-sm hover:shadow"}`}
+                    } ${loading === n.id ? "opacity-50" : "shadow-sm hover:shadow"}`}
                 >
                   <div
                     className="peer flex-1 min-w-0 pr-2 cursor-pointer"

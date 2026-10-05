@@ -74,7 +74,6 @@ export default function NotificationOrganization({ onClose }) {
       queryClient.invalidateQueries({ queryKey: ["mission"] });
       queryClient.invalidateQueries({ queryKey: ["missions"] });
       queryClient.invalidateQueries({ queryKey: ["orgMissions"] });
-      refetch?.();
     } catch (e) {
       console.error(e);
     } finally {
@@ -113,9 +112,8 @@ export default function NotificationOrganization({ onClose }) {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
-              tab === t ? "bg-blue-600 text-white shadow-sm" : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-            }`}
+            className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${tab === t ? "bg-blue-600 text-white shadow-sm" : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+              }`}
           >
             {t[0].toUpperCase() + t.slice(1)}
           </button>
@@ -136,11 +134,10 @@ export default function NotificationOrganization({ onClose }) {
             return (
               <div
                 key={n.id}
-                className={`relative flex justify-between items-center gap-3 p-3.5 rounded-xl transition-all duration-200 border ${
-                  n.status === "unread" 
-                    ? "bg-blue-50/30 border-blue-100/50 hover:bg-blue-50/50" 
+                className={`relative flex justify-between items-center gap-3 p-3.5 rounded-xl transition-all duration-200 border ${n.status === "unread"
+                    ? "bg-blue-50/30 border-blue-100/50 hover:bg-blue-50/50"
                     : "bg-white border-gray-100/70 hover:bg-gray-50/50"
-                } ${done ? "opacity-40" : "shadow-sm hover:shadow"}`}
+                  } ${done ? "opacity-40" : "shadow-sm hover:shadow"}`}
               >
                 <div
                   className="peer flex-1 min-w-0 pr-2 cursor-pointer"
@@ -167,15 +164,14 @@ export default function NotificationOrganization({ onClose }) {
                               <button
                                 key={a}
                                 onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleAction(a, n);
+                                  e.stopPropagation();
+                                  handleAction(a, n);
                                 }}
                                 disabled={busy(a)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                                  a === "accept"
+                                className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${a === "accept"
                                     ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
                                     : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                                } disabled:opacity-60`}
+                                  } disabled:opacity-60`}
                               >
                                 {busy(a) ? <FaSpinner size={12} className="animate-spin" /> : null}
                                 {a === "accept" ? "Accept" : "Reject"}
@@ -202,11 +198,10 @@ export default function NotificationOrganization({ onClose }) {
                                   handleAction(a, n);
                                 }}
                                 disabled={busy(a)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                                  a === "accept"
+                                className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${a === "accept"
                                     ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
                                     : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                                } disabled:opacity-60`}
+                                  } disabled:opacity-60`}
                               >
                                 {busy(a) ? <FaSpinner size={12} className="animate-spin" /> : null}
                                 {a === "accept" ? "Accept" : "Reject"}

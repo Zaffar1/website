@@ -53,17 +53,9 @@ export default function MissionDetails() {
         }
     });
 
-    const { mutate: sendCompletionRequest, isPending: isSendingCompletion } = useCompletionRequest({
-        onSuccess: () => {
-            refetch();
-        }
-    });
+    const { mutate: sendCompletionRequest, isPending: isSendingCompletion } = useCompletionRequest();
 
-    const { mutate: updateVolunteerStatus, isPending: isUpdatingVolunteerStatus } = useUpdateGroupVolunteerMissionStatus({
-        onSuccess: () => {
-            refetch();
-        }
-    });
+    const { mutate: updateVolunteerStatus, isPending: isUpdatingVolunteerStatus } = useUpdateGroupVolunteerMissionStatus();
 
     const toggleVolunteer = (volId) => {
         setSelectedVolunteers(prev =>
@@ -227,7 +219,7 @@ export default function MissionDetails() {
 
     const handlePostFeed = () => {
         if (!mission?.id) return showError("Mission ID missing!");
-        postFeed(mission.id, { onSuccess: refetch });
+        postFeed(mission.id);
     }
 
     const effectiveStatus = getEffectiveMissionStatus(mission.status, mission.start_time);

@@ -30,11 +30,8 @@ export default function Header({ navItems = [], showSearch = true }) {
     const willOpen = !notifOpen;
     setNotifOpen(willOpen);
 
-    if (willOpen) {
-      refetch?.();
-      if (unreadCount > 0) {
-        markAllAsRead();
-      }
+    if (willOpen && unreadCount > 0) {
+      markAllAsRead();
     }
   };
 
