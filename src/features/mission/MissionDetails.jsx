@@ -76,7 +76,8 @@ export default function MissionDetails() {
     const isOrganization = user?.type === "organization";
 
     const currentAssignedCount = mission?.assigned_volunteers?.length || mission?.assigned_count || 0;
-    const volunteerRequired = Number(mission?.volunteer_required) || 0;
+    const volunteersRequiredVal = mission?.volunteer_required ?? mission?.volunteers_required ?? mission?.volunteerRequired ?? mission?.volunteersRequired;
+    const volunteerRequired = Number(volunteersRequiredVal) || 0;
     const remainingSpots = Math.max(0, volunteerRequired - currentAssignedCount);
 
     // Calculate assignments details for details modal
@@ -257,7 +258,7 @@ export default function MissionDetails() {
                 />
                 {isOrganization &&
                     <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
-                        <EditMissionButton missionId={mission?.id} />
+                        <EditMissionButton missionId={mission?.id} status={mission?.status} />
                         <DeleteMissionButton missionId={mission?.id} />
                     </div>
                 }
@@ -320,6 +321,10 @@ export default function MissionDetails() {
                         <Detail label="Work Type" value={mission.work_type} />
                         <Detail label="Mission Type" value={mission.mission_type} />
                         <Detail label="Distance" value={mission.relevant_distance} />
+                        <Detail
+                            label="Volunteers Required"
+                            value={volunteersRequiredVal !== null && volunteersRequiredVal !== undefined && volunteersRequiredVal !== "" ? volunteersRequiredVal : "N/A"}
+                        />
                     </div>
                     <div className="space-y-2 flex items-end flex-col">
                         <Detail

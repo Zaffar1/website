@@ -52,9 +52,29 @@ export function useUpdateMission(options = {}) {
       options?.onSuccess?.(data, variables);
     },
     onError: (err) => {
-      const msg = err.response?.data?.message || "Mission update failed!";
+      const responseData = err.response?.data;
+      let msg = responseData?.message;
+      if (!msg && responseData?.errors) {
+        if (Array.isArray(responseData.errors)) {
+          msg = responseData.errors
+            .map((e) => (typeof e === "string" ? e : e.msg || e.message || JSON.stringify(e)))
+            .join(", ");
+        } else if (typeof responseData.errors === "object") {
+          msg = Object.entries(responseData.errors)
+            .map(([k, v]) => (typeof v === "object" ? v?.message || v?.msg || JSON.stringify(v) : `${k}: ${v}`))
+            .join(", ");
+        }
+      } else if (!msg && responseData?.error) {
+        msg = typeof responseData.error === "string" ? responseData.error : JSON.stringify(responseData.error);
+      }
+      if (!msg && typeof responseData === "string") {
+        msg = responseData;
+      }
+      if (!msg) {
+        msg = err.message || "Mission update failed!";
+      }
       showError(msg);
-      options?.onError?.(err);
+      options?.onError?.(err, msg);
     },
   });
 }
