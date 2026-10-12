@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { FaTimes, FaCheckCircle, FaEye } from "react-icons/fa";
+import { useParams, useNavigate } from "react-router-dom";
+import { FaTimes, FaCheckCircle, FaEye, FaChevronLeft } from "react-icons/fa";
 import { ThemeButton } from "../../components/ThemeButton";
 import { useCanPostMissionMutation, useMissionDetail, useRequestMission, useCompletionRequest } from "../../api/mission";
 import { useGetGroupVolunteers, useAssignGroupVolunteersToMission, useUpdateGroupVolunteerMissionStatus } from "../../api/volunteerGroup";
@@ -22,6 +22,7 @@ import { ErrorText } from "../../components/mission/errorText";
 
 export default function MissionDetails() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { data, isLoading, isError, error, refetch } = useMissionDetail(id);
     const { user } = useUserProfile();
     const { mutate: requestMission, isPending } = useRequestMission();
@@ -256,6 +257,14 @@ export default function MissionDetails() {
                     alt={mission?.name}
                     className="w-full h-full object-cover"
                 />
+                <button
+                    onClick={() => navigate(-1)}
+                    className="absolute top-3 left-3 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors z-20 cursor-pointer"
+                    title="Go Back"
+                    aria-label="Go Back"
+                >
+                    <FaChevronLeft className="w-5 h-5 text-white" />
+                </button>
                 {isOrganization &&
                     <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
                         <EditMissionButton missionId={mission?.id} status={mission?.status} />

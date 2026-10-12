@@ -145,8 +145,6 @@ export function useAllMissions({ page, limit }, options = {}) {
       return data;
     },
     keepPreviousData: true,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
     ...options,
   });
 }
@@ -164,10 +162,6 @@ export function useInfiniteMissions({ limit = 10 }, options = {}) {
       const nextPage = allPages.length + 1;
       return nextPage <= totalPages ? nextPage : undefined;
     },
-    refetchInterval: 8000,
-    refetchIntervalInBackground: false,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
     ...options,
   });
 }
@@ -180,8 +174,6 @@ export function useAllOrganizationMissions({ page, limit }, options = {}) {
       return data;
     },
     keepPreviousData: true,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
     ...options,
   });
 }
@@ -194,15 +186,11 @@ export function useInfiniteOrganizationMissions({ limit = 10 }, options = {}) {
       return data;
     },
     getNextPageParam: (lastPage, allPages) => {
-      const total = lastPage.total || 0;
+      const total = lastPage.totalMissions || lastPage.total || 0;
       const totalPages = lastPage.totalPages || Math.ceil(total / limit);
       const nextPage = allPages.length + 1;
       return nextPage <= totalPages ? nextPage : undefined;
     },
-    refetchInterval: 8000,
-    refetchIntervalInBackground: false,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
     ...options,
   });
 }
@@ -215,8 +203,6 @@ export function useAllFeeds({ page, limit }, options = {}) {
       return data;
     },
     keepPreviousData: true,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
     ...options,
   });
 }
@@ -234,10 +220,6 @@ export function useInfiniteFeeds({ limit = 10 } = {}, options = {}) {
       const nextPage = allPages.length + 1;
       return nextPage <= totalPages ? nextPage : undefined;
     },
-    refetchInterval: 8000,
-    refetchIntervalInBackground: false,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
     ...options,
   });
 }
